@@ -2,10 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using static UnityEditor.Progress;
 using Unity.VisualScripting;
-using JetBrains.Annotations;
 using UnityEditor.UIElements;
+
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine.UIElements;
@@ -15,13 +14,6 @@ public class GravityObject : MonoBehaviour
 {
     [SerializeField]
     private List<GravityData> gravityPoints = new List<GravityData>();
-
-    public int test = 1;
-
-    private void Update()
-    {
-        Debug.Log(test);
-    }
 
     private void OnDrawGizmosSelected()
     {
@@ -79,12 +71,9 @@ public class GravityObject_Inspector : Editor
             if(gravityPointDisply != null)
             {
                 gravityPointDisply.GetDropdown().text = "Gravity Point " + i.ToString();
-                //gravityPointDisply.GetPosition().bindingPath = "m_gravityPoints.Array.data[" + i + "].m_Position";
-                gravityPointDisply.GetPosition().bindingPath = "m_test";
-                //gravityPointDisply.GetDirection().bindingPath = "m_gravityPoints.Array.data[" + i + "].m_Direction";
-                gravityPointDisply.GetDirection().bindingPath = "m_test";
-                gravityPointDisply.GetPosition().Bind(new SerializedObject(gravityObject));
-                gravityPointDisply.GetPosition().RegisterCallback<ChangeEvent<Vector3Field>, int>(PositionChanged, i);
+                gravityPointDisply.GetPosition().bindingPath = "gravityPoints.Array.data[" + i + "].Position";
+                gravityPointDisply.GetDirection().bindingPath = "gravityPoints.Array.data[" + i + "].Direction";
+                gravityPointDisply.Bind(new SerializedObject(gravityObject));
             }
         });
 
@@ -106,14 +95,6 @@ public class GravityObject_Inspector : Editor
         
         myInspector.Add(listView);
         return myInspector;
-    }
-
-    private void PositionChanged(ChangeEvent<Vector3Field> field, int i)
-    {
-        if (field.newValue != field.previousValue)
-        {
-            gravityObject.GetGravityPoint(i).Position = field.newValue.value;
-        }
     }
 
     class GravityPointDisply : VisualElement
