@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class GravityManager : MonoBehaviour
 {
+    public enum RegularShapes { Sphere, Cube, Box}
+    public enum CoveragePresets { Standard, Minimal, Extra}
+
     //The active nearby gravityPoints
     private List<GravityData> gravityPoints = new List<GravityData>();
 
